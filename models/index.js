@@ -19,21 +19,21 @@ async function setup(){
 
 async function seed(){
     await User.bulkCreate([
-          {flavorName:"chocolate"},
-          {flavorName:"banana"},
-          {flavorName:"vanilla"},
-          {flavorName:"butterscotch"},
-          {flavorName:"mango"},
-          {flavorName:"coconut"},
-          {flavorName:"strawberry"},
-          {flavorName:"pistachio"},
-          {flavorName:"mint"},
-          {flavorName:"blueberry"},
-          {flavorName:"saltedcaramel"},
-          {flavorName:"almond"},
-          {flavorName:"coffeeoreo"},
-          {flavorName:"guava"},
-          {flavorName:"pineapple"},
+          {userName:"chocolate"},
+          {userName:"banana"},
+          {userName:"vanilla"},
+          {userName:"butterscotch"},
+          {userName:"mango"},
+          {userName:"coconut"},
+          {userName:"strawberry"},
+          {userName:"pistachio"},
+          {userName:"mint"},
+          {userName:"blueberry"},
+          {userName:"saltedcaramel"},
+          {userName:"almond"},
+          {userName:"coffeeoreo"},
+          {userName:"guava"},
+          {userName:"pineapple"},
         ])
 }
 
@@ -44,4 +44,4 @@ async function start(){
 
 start()
 
-module.exports = {User, Flavor}
+module.exports = {User, Message, Task}

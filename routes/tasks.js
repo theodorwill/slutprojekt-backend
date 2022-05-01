@@ -4,7 +4,6 @@ const {Router} = require('express')
 
 const router = new Router()
 
-router.post(  '/auth',               AuthController.authenticate)
 router.post(  '/', Auth.user,   TaskController.createTask)
 
 

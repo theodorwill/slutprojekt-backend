@@ -1,6 +1,6 @@
 const {Model, DataTypes, ENUM} = require('sequelize')
 const connection = require('../database/connection')
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
 
 
 class User extends Model{
@@ -22,24 +22,24 @@ class User extends Model{
         type: DataTypes.TEXT,
         allowNull: false
       },
-      email: {
-        type: DataTypes.TEXT,
-        allowNull: false
-      },
-      userId:{
-          type: DataTypes.INTEGER,
-          autoIncrement:true,
-          allowNull:false,
-          primaryKey:true
-      },
-      password:{
-        type: DataTypes.TEXT,
-        allowNull: false
-      },
-      role:{
-          type:DataTypes.ENUM('admin','worker','client'),
-          allowNull:false
-      }
+    //   email: {
+    //     type: DataTypes.TEXT,
+    //     allowNull: false
+    //   },
+    //   userId:{
+    //       type: DataTypes.INTEGER,
+    //       autoIncrement:true,
+    //       allowNull:false,
+    //       primaryKey:true
+    //   },
+    //   password:{
+    //     type: DataTypes.TEXT,
+    //     allowNull: false
+    //   },
+    //   role:{
+    //       type:DataTypes.ENUM('admin','worker','client'),
+    //       allowNull:false
+    //   }
     },
     {
       sequelize: connection,
