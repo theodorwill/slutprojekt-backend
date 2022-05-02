@@ -1,4 +1,6 @@
 const database = require("../database/connection");
+const bcrypt = require("bcryptjs");
+
 
 const User = require('./User')
 const Message = require('./Message')
@@ -14,29 +16,19 @@ User.hasMany(Message)
 Message.belongsTo(User)
 
 async function setup(){
-    await database.sync({alter: true})
+    await database.sync({force: true})
 }
 
 async function seed(){
     await User.bulkCreate([
-          {userName:"chocolate"},
-          {userName:"banana"},
-          {userName:"vanilla"},
-          {userName:"butterscotch"},
-          {userName:"mango"},
-          {userName:"coconut"},
-          {userName:"strawberry"},
-          {userName:"pistachio"},
-          {userName:"mint"},
-          {userName:"blueberry"},
-          {userName:"saltedcaramel"},
-          {userName:"almond"},
-          {userName:"coffeeoreo"},
-          {userName:"guava"},
-          {userName:"pineapple"},
+          {userName:"mango",email:"teha@345.nj",password:generateHash("aaa"),role:"client"},
         ])
 }
 
+function generateHash(password) {
+    const hash = bcrypt.hashSync(password);
+    return hash;
+  }
 async function start(){
     await setup()
     await seed()
