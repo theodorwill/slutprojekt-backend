@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+require('dotenv').config()
 
 module.exports = {
 
@@ -69,6 +70,6 @@ module.exports = {
 
 function verifyToken(req) {
   const token = req.header('Authorization').replace('Bearer ', '')
-  const data = jwt.verify(token, 'secret')
+  const data = jwt.verify(token,process.env.JWT_SECRET)
   return data
 }
