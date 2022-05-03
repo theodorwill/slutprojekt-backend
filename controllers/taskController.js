@@ -6,7 +6,8 @@ module.exports = {
         if(req.user.role == 'worker'){
             tasks = await Task.findAll();
         } else {
-            tasks = await Task.findAll({where:{clientId: req.user.id}});
+            console.log("myLog", req.user.userId);
+            tasks = await Task.findAll({where:{clientId: req.user.userId}});
         }
         res.json(tasks);
     },
