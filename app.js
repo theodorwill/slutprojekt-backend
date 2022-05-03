@@ -10,7 +10,6 @@ const app = express();
 //middleware
 app.use( Logger )
 app.use(express.json());
-app.use(errorHandler)
 
 
 /* // register view engine
@@ -21,6 +20,7 @@ app.set('view engine', 'ejs'); */
 // app.use('/api/messages', routes.messages);
 // app.use('/api/tasks', routes.tasks);
 app.use('/api', routes.auth);
+app.use(errorHandler)
 
 app.get('/',(req,res)=>{
     res.json({message:"hellooo"})
