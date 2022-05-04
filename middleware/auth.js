@@ -7,7 +7,9 @@ module.exports = {
   async admin(req, res, next){
     try {
       const data = verifyToken(req)
-      const user = await User.findOneBy({ id: data.id })
+      console.log("data in middleware",data)
+      const user = await User.findOne({where:{ userId: data.userId }})
+      console.log("user",user)
       if (!user) { throw new Error() }
       else if(user.role != "admin"){ throw new Error() }
       req.user = user

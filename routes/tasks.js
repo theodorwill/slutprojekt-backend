@@ -4,7 +4,9 @@ const {Router} = require('express')
 
 const router = new Router()
 
-router.post('/', Auth.user,   TaskController.createTask)
+router.get('/', Auth.user, TaskController.getTasks)
+
+// router.post('/', Auth.user,   TaskController.createTask)
 
 
 module.exports = router

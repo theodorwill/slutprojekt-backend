@@ -20,6 +20,7 @@ app.set('view engine', 'ejs'); */
 // app.use('/api/messages', routes.messages);
 // app.use('/api/tasks', routes.tasks);
 app.use('/api', routes.auth);
+app.use('/tasks', routes.tasks);
 app.use(errorHandler)
 
 app.get('/',(req,res)=>{
