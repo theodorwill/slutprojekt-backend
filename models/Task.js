@@ -21,16 +21,9 @@ class Task extends Model{}
           primaryKey:true
       },
       image:{
-          type: DataTypes.TEXT//needs to be changed
+        type: DataTypes.TEXT,//needs to be changed
+        allowNull:true
       },
-      workerId:{
-          type:DataTypes.INTEGER,
-          allowNull:false
-      },
-      clientId:{
-        type:DataTypes.INTEGER,
-        allowNull:false
-    }
     },
     {
       sequelize: connection,

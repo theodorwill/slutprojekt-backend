@@ -16,14 +16,7 @@ class Message extends Model{}
           allowNull:false,
           primaryKey:true
       },
-      image:{
-          type: DataTypes.TEXT//needs to be changed
-      },
-      author:{
-          type:DataTypes.INTEGER,
-          allowNull:false
-      },
-
+      
     },
     {
       sequelize: connection,
