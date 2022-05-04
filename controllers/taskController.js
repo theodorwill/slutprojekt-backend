@@ -16,6 +16,13 @@ module.exports = {
         res.json(tasks);
     },
 
+    getSingleTask: async (req, res) => {
+        const {id} = req.params;
+        const task = await Task.findOne({where:{taskId: id}});
+        
+        res.json(task);
+    },
+
     createTask: async (req, res) => {
         const task = await Task.create({
             status: 'Pending',

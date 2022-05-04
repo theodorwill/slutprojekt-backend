@@ -5,7 +5,7 @@ const {Router} = require('express')
 const router = new Router()
 
 router.get('/', Auth.user, TaskController.getTasks)
-// router.get('/:id', Auth.user, TaskController.getOneTask)
+router.get('/:id', Auth.user, TaskController.getSingleTask)
 // router.patch('/:id',Auth.worker,TaskController.updateTask)
 // router.delete('/:id',Auth.admin,TaskController.deleteTask)
 // router.get('/:id/messages', Auth.user, TaskController.getMessages)
