@@ -26,6 +26,12 @@ async function seed() {
       password: generateHash('aaa'),
       role: 'client',
     },
+    {
+      userName: 'banana',
+      email: 'admin@admin.com',
+      password: generateHash('abc'),
+      role: 'admin',
+    },
   ])
 
   await Task.bulkCreate([

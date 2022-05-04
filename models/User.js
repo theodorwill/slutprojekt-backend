@@ -11,7 +11,7 @@ class User extends Model {
     if (!email || !password) {
       throw new InvalidCredentials();
     }
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } }); 
     if (!user) {
       throw new InvalidCredentials();
     }
