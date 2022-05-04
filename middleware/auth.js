@@ -24,7 +24,7 @@ module.exports = {
   async worker(req, res, next){
     try {
       const data = verifyToken(req)
-      const user = await User.findOneBy({ id: data.id })
+      const user = await User.findOne({where:{ userId: data.userId }})
       if (!user) { throw new Error() }
       else if(user.role != "worker"){ throw new Error() }
 
@@ -41,7 +41,7 @@ module.exports = {
   async client(req, res, next){
     try {
       const data = verifyToken(req)
-      const user = await User.findOneBy({id: data.id })
+      const user = await User.findOne({where:{ userId: data.userId }})
       if (!user) { throw new Error() }
       else if(user.role != "client"){ throw new Error() }
 
@@ -58,7 +58,7 @@ module.exports = {
   async user(req, res, next){
     try {
       const data = verifyToken(req)
-      const user = await User.findOne(data.id)
+      const user = await User.findOne({where:{userId:data.userId}})
       if (!user) { throw new Error() }
       req.user = user
       next()

@@ -6,17 +6,16 @@ module.exports = {
         if(req.user.role == 'worker'){
             tasks = await Task.findAll();
         } else {
-            console.log("myLog", req.user.userId);
+            console.log("myLog", req.user);
             tasks = await Task.findAll({where:{clientId: req.user.userId}});
         }
         res.json(tasks);
     },
 
     createTask: async (req, res) => {
-        
         const task = await Task.create({
             status: 'Pending',
-            
+
         })
     }
 
