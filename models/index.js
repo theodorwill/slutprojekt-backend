@@ -8,6 +8,7 @@ const Task = require('./Task')
 
 User.hasMany(Task);
 Task.belongsTo(User);
+Task.belongsTo(User);
 
 Task.hasMany(Message)
 Message.belongsTo(User)
@@ -22,6 +23,7 @@ async function setup(){
 async function seed(){
     await User.bulkCreate([
           {userName:"mango",email:"teha@345.nj",password:generateHash("aaa"),role:"client"},
+          {userName:"banana",email:"admin@admin.com",password:generateHash("abc"),role:"admin"},
         ])
 }
 
