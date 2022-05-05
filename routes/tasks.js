@@ -6,12 +6,10 @@ const router = new Router()
 
 router.get('/', Auth.user, TaskController.getTasks)
 router.get('/:id', Auth.user, TaskController.getOneTask)
+router.post('/', Auth.worker,   TaskController.createTask)
 router.patch('/:id',Auth.worker,TaskController.updateTask)
 router.delete('/:id',Auth.admin,TaskController.deleteTask)
-// router.get('/:id/messages', Auth.user, TaskController.getMessages)
-// router.get('/:id/images', Auth.user, TaskController.getImages)
-
-// router.post('/', Auth.user,   TaskController.createTask)
+router.get('/:id/images', Auth.user, TaskController.getImages)
 
 
 module.exports = router
