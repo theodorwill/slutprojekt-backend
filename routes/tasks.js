@@ -1,4 +1,5 @@
 const TaskController = require('../controllers/taskController')
+const MessageController = require('../controllers/messageController')
 const Auth = require('../middleware/auth')
 const {Router} = require('express')
 
@@ -11,7 +12,7 @@ router.post('/create', Auth.worker,   TaskController.createTask)
 // router.delete('/:id',Auth.admin,TaskController.deleteTask)
 // router.get('/:id/images', Auth.user, TaskController.getImages)
 
-router.get('/:id/messages', Auth.user, TaskController.getMessages)
-router.post('/:id/messages', Auth.user, TaskController.postMessage)
+router.get('/:id/messages', Auth.user, MessageController.getMessages)
+router.post('/:id/messages', Auth.user, MessageController.postMessage)
 
 module.exports = router
