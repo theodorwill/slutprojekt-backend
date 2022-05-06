@@ -24,6 +24,10 @@ class Task extends Model{}
         type: DataTypes.TEXT,//needs to be changed
         allowNull:true
       },
+      title:{
+        type:DataTypes.TEXT,
+        allowNull:false
+      }
     },
     {
       sequelize: connection,
