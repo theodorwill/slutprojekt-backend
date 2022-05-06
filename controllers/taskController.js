@@ -25,6 +25,29 @@ module.exports = {
     res.json(task);
   },
 
+  getMessages: async (req, res)=>{
+      const {id} = req.params;
+      const message = await Message.findAll({where: {taskId: id}})
+      res.json(message)
+  },
+
+  postMessage: async(req, res)=>{
+    const result = validateTask(req.body);
+
+    const {id} = req.params;
+    const {authorId} = req.user.id;
+    const {content} = req.body
+    
+    if (!result.error){     
+        const message = await Message.create({
+            content: content,
+            taskId: id,
+            authorId: authorId
+        })
+        res.json(message)
+    }
+  },
+
   createTask: async (req, res) => {
     const result = validateTask(req.body);
     if (!result.error) {

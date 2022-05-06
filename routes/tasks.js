@@ -11,5 +11,7 @@ router.post('/create', Auth.worker,   TaskController.createTask)
 // router.delete('/:id',Auth.admin,TaskController.deleteTask)
 // router.get('/:id/images', Auth.user, TaskController.getImages)
 
+router.get('/:id/messages', Auth.user, TaskController.getMessages)
+router.post('/:id/messages', Auth.user, TaskController.postMessage)
 
 module.exports = router
