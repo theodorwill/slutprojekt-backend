@@ -12,13 +12,8 @@ app.use( Logger )
 app.use(express.json());
 
 
-/* // register view engine
-app.set('view engine', 'ejs'); */
-
 //routes
-// app.use('/', routes.users);
 // app.use('/api/messages', routes.messages);
-// app.use('/api/tasks', routes.tasks);
 app.use('/api', routes.auth);
 app.use('/api/tasks', routes.tasks);
 app.use(errorHandler)

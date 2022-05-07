@@ -94,7 +94,20 @@ module.exports = {
         }
       }
     }
+  },
 
+  deleteTask: async (req, res) => {
+    const taskId = req.params.id
+    if(!taskId){
+      res.status(400).json({error:"No id specified"})
+    }else{
+      let result = await Task.destroy({where:{taskId:req.params.id }} )
+        if(result==0){
+            res.status(400).json({error: 'Could not delete task'})
+        }else{
+            res.status(200).json({message: 'Task deleted'})
+        }
+    }
   }
 };
 
