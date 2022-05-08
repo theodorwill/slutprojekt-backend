@@ -12,7 +12,7 @@ const app = express()
 app.use(Logger)
 app.use(express.json())
 app.use(express.static('public'))
-app.use(fileUpload())
+app.use(fileUpload({useTempFiles : true}))
 
 /* // register view engine
 app.set('view engine', 'ejs'); */
