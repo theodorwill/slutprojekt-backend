@@ -13,14 +13,10 @@ app.use(express.json());
 
 
 //routes
-// app.use('/api/task', routes.messages);
+app.use('/api/tasks', routes.messages);
 app.use('/api', routes.auth);
 app.use('/api/tasks', routes.tasks);
 app.use(errorHandler)
-
-app.get('/',(req,res)=>{
-    res.json({message:"hellooo"})
-})
 
 // Listen for requests
     const PORT = process.env.PORT || 7000
