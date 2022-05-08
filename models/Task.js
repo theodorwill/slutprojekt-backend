@@ -21,11 +21,11 @@ class Task extends Model{}
           primaryKey:true
       },
       image:{
-        type: DataTypes.TEXT,//needs to be changed
-        allowNull:true
+        type: DataTypes.STRING,
+        allowNull: true
       },
       title:{
-        type:DataTypes.TEXT,
+        type: DataTypes.TEXT,
         allowNull:false
       }
     },
