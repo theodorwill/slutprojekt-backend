@@ -13,7 +13,7 @@ app.use(express.json());
 
 
 //routes
-// app.use('/api/messages', routes.messages);
+// app.use('/api/task', routes.messages);
 app.use('/api', routes.auth);
 app.use('/api/tasks', routes.tasks);
 app.use(errorHandler)
