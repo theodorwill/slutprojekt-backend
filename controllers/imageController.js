@@ -1,8 +1,9 @@
+const fs = require('fs')
 const path = require('path')
 
 module.exports = {
   getAll: (req, res) => {
-    const images = fs.readdirSync(path.join('public', 'images'))
+    const images = fs.readdirSync(path.join(__dirname, '..', 'public', 'images'))
     res.json({ images })
   },
 
