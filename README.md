@@ -19,5 +19,7 @@ npm install
 | /api/tasks/ | GET | Get all the tasks. An admin gets all the tasks of all users. A worker or a client gets only tasks linked to them | ❌ |  ❌ |
 | /api/tasks/create | POST | Creates a task. Only for workers | { description:"...", clientId:"..", title: "..."} |  ❌ |
 | /api/tasks/:id | PATCH | Update a task. Only for workers. Can update the status as well | { description:"...", title: "...", status:"..."}|  ❌ |
-| /api/delete/:id | DELETE | Delete a task. Only for admins. Deletes a particular task | { description:"...", title: "...", status:"..."}|  ❌ |
+| /api/tasks/delete/:id | DELETE | Delete a task. Only for admins. Deletes a particular task | { description:"...", title: "...", status:"..."}|  ❌ |
+| /api/tasks/:id/post | POST | Write a message on the specified task. Only for the client and worker associated with the task and the admins. | { content:"..."}|  ❌ |
+| /api/tasks/:id/messages | GET | Get all the messages written on the specified task. Only for the client and worker associated with the task and the admins. | ❌ |  ❌ |
 

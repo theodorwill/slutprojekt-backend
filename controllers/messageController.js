@@ -1,7 +1,6 @@
 const Task = require("../models/Task");
 const Message = require("../models/Message");
 const jwt = require("jsonwebtoken");
-const { response } = require("express");
 require("dotenv").config();
 
 module.exports = {
@@ -76,10 +75,10 @@ async function validateTaskUser(req, result) {
       result.error = true;
       result.messages.push("No task exists with the specified task id");
     } else {
-      if (!(author.userId == task.clientId || author.userId == task.workerId)) {
+      if (!(author.userId == task.clientId || author.userId == task.workerId || author.role == "admin")) {
         result.error = true;
         result.messages.push(
-          "A message can be written only either by the worker or by the client associated with this task"
+          "A message can be seen or written only either by the worker or by the client associated with this task"
         );
       }
     }
