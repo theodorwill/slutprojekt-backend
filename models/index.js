@@ -45,29 +45,29 @@ async function seed() {
     {
       status: 'Pending',
       description: 'blablabla',
-      workerId: '1',
+      workerId: '3',
       clientId: '1',
       title:'title1'
     },
     {
       status: 'Pending',
       description: 'something',
-      workerId: '1',
+      workerId: '3',
       clientId: '1',
       title:'title2'
     },
     {
       status: 'Pending',
       description: 'random',
-      workerId: '1',
-      clientId: '2',
+      workerId: '3',
+      clientId: '1',
       title:'title3'
     },
     {
       status: 'Pending',
       description: 'big problem',
-      workerId: '1',
-      clientId: '2',
+      workerId: '3',
+      clientId: '1',
       title:'title4'
     },
   ])
