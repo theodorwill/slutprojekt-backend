@@ -1,22 +1,25 @@
 const Task = require("../models/Task");
-const Message = require("../models/Message");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = {
   getTasks: async (req, res) => {
-    if (req.user.role === "worker" || req.user.role === "admin") {
+    const user = await getUser(req);
+    let tasks;
+    if (user.role === "admin") {
       tasks = await Task.findAll();
-    } else if (req.user.role === "client") {
-      console.log("myLog", req.user);
-      tasks = await Task.findAll({ where: { clientId: req.user.userId } });
+    } else if (user.role === "client") {
+      tasks = await Task.findAll({ where: { clientId: user.userId } });
+      res.status(200).json(tasks);
+    } else if (user.role === "worker") {
+      tasks = await Task.findAll({ where: { workerId: user.userId } });
+      res.status(200).json(tasks);
     } else {
       res.status(401).json({
         error: "Not logged in!",
       });
     }
-    res.json(tasks);
   },
 
   getSingleTask: async (req, res) => {
@@ -26,9 +29,9 @@ module.exports = {
   },
 
   createTask: async (req, res) => {
-    const result = validateTask(req.body);
+    const result = await validateTask(req.body);
     if (!result.error) {
-      const workerId = await getWorkerId(req);
+      const worker = await getUser(req);
       const { description, image, clientId, title } = req.body;
 
       const task = await Task.create({
@@ -36,7 +39,7 @@ module.exports = {
         description: description,
         image: image,
         clientId: clientId,
-        workerId: workerId,
+        workerId: worker.userId,
         title: title,
       });
 
@@ -49,13 +52,62 @@ module.exports = {
           message: "New Task created",
         });
       }
-
     } else {
       res.status(401).json({
         error: result.messages,
       });
     }
   },
+
+  updateTask: async (req,res) => {
+    const taskId = req.params.id;
+    const updateFields = req.body
+    const user = await getUser(req);
+  let result = { error: false, messages: [] };
+    if(user.role!="worker"){
+      res.status(400).json("Unauthorized")
+    }else{
+      let task = await Task.findOne({where:{taskId}})
+      if(task.taskId!=taskId){
+        res.status(401).json("Task not found")
+      }else{
+        if(updateFields.description){
+          await task.update({description:updateFields.description})
+        }
+        if(updateFields.title){
+          await task.update({title:updateFields.title})
+        }
+        if(updateFields.status){
+          if(updateFields.status == "Pending" || updateFields.status =="Done"){
+            await task.update({status:updateFields.status})
+          }else{
+             result.error=true
+             result.messages.push("Status of task should ne either Done or Pending")
+          }
+        }
+        // if(image)// needs to be fixed
+        if(!result.error){
+          res.status(200).json("Updated successfully")
+        }else{
+          res.status(401).json({error:result.messages})
+        }
+      }
+    }
+  },
+
+  deleteTask: async (req, res) => {
+    const taskId = req.params.id
+    if(!taskId){
+      res.status(400).json({error:"No id specified"})
+    }else{
+      let result = await Task.destroy({where:{taskId:req.params.id }} )
+        if(result==0){
+            res.status(400).json({error: 'Could not delete task'})
+        }else{
+            res.status(200).json({message: 'Task deleted'})
+        }
+    }
+  }
 };
 
 async function validateTask(body) {
@@ -69,10 +121,15 @@ async function validateTask(body) {
     result.error = true;
     result.messages.push("No client id provided");
   } else {
-    const user = await User.findOne({ where: { userId:clientId } });
+    const user = await User.findOne({ where: { userId: clientId } });
     if (!user) {
       result.error = true;
       result.messages.push("No client exists with the specified client id");
+    } else if (user.role != "client") {
+      result.error = true;
+      result.messages.push(
+        "Can create task only in association with client. You might have provided a worker's or admin's id"
+      );
     }
   }
   if (!title) {
@@ -82,8 +139,8 @@ async function validateTask(body) {
   return result;
 }
 
-async function getWorkerId(req) {
+async function getUser(req) {
   const token = req.header("Authorization").replace("Bearer ", "");
   const data = jwt.verify(token, process.env.JWT_SECRET);
-  return data.userId;
+  return data;
 }
