@@ -11,6 +11,7 @@ module.exports = {
   upload: (req, res) => {
     
     let sampleFile = req.files.image;
+    console.log(sampleFile);
 
     if(!sampleFile.mimetype.startsWith('image/')){
         throw new InvalidFile('Invaild file, must be an image') 
