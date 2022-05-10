@@ -6,7 +6,8 @@ require("dotenv").config();
 
 module.exports = {
   getTasks: async (req, res) => {
-    const user = await getUser(req);
+    // const user = await getUser(req);
+    const user = req.user
     let tasks;
     if (user.role === "admin") {
       tasks = await Task.findAll();
@@ -26,7 +27,8 @@ module.exports = {
   getSingleTask: async (req, res) => {
     const { id } = req.params;
     const task = await Task.findOne({ where: { taskId: id } });
-    const user = await getUser(req)
+    // const user = await getUser(req)
+    const user = req.user
     if(task){
       if (!(user.userId == task.clientId || user.userId == task.workerId || user.role == "admin")) {
         res.status(401).json({error:"A task can be seen only either by the worker or by the client associated with this task"})
@@ -41,7 +43,8 @@ module.exports = {
   createTask: async (req, res) => {
     const result = await validateTask(req.body);
     if (!result.error) {
-      const worker = await getUser(req);
+      // const worker = await getUser(req);
+      const worker = req.user
       const { description, image, clientId, title } = req.body;
 
       const task = await Task.create({
@@ -72,12 +75,13 @@ module.exports = {
   updateTask: async (req,res) => {
     const taskId = req.params.id;
     const updateFields = req.body
-    const user = await getUser(req);
+    // const user = await getUser(req);
+    let task = await Task.findOne({where:{taskId}})
+    const user = req.user
   let result = { error: false, messages: [] };
-    if(user.role!="worker"){
+    if(user.userId!=task.workerId){
       res.status(400).json("Unauthorized")
     }else{
-      let task = await Task.findOne({where:{taskId}})
       if(task.taskId!=taskId){
         res.status(401).json("Task not found")
       }else{
@@ -95,10 +99,6 @@ module.exports = {
              result.messages.push("Status of task should ne either Done or Pending")
           }
         }
-        // if(updateFields.image){
-        //   let upload = ImageController.upload
-        // }
-        // if(image)// needs to be fixed
         if(!result.error){
           res.status(200).json("Updated successfully")
         }else{

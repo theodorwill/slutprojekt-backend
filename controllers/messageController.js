@@ -29,7 +29,8 @@ module.exports = {
   postMessage: async (req, res) => {
     const result = await validateMessage(req);
     if (!result.error) {
-      const author = await getUser(req);
+      // const author = await getUser(req);
+      const author = req.user
       const message = await Message.create({
         content: req.body.content,
         taskId: req.params.id,
@@ -64,7 +65,8 @@ async function validateMessage(req) {
 }
 
 async function validateTaskUser(req, result) {
-  const author = await getUser(req);
+  // const author = await getUser(req);
+  const author = req.user
   const taskId = req.params.id;
   if (!taskId) {
     result.error = true;
