@@ -5,8 +5,6 @@ Inge Bra Bygg AB
 ```
 npm install
 ```
-# Diagram v1.0
-![diagram](./Backend-slutprojekt-white.png)
 
 ### EndPoints
 
@@ -22,4 +20,6 @@ npm install
 | /api/tasks/delete/:id | DELETE | Delete a task. Only for admins. Deletes a particular task | { description:"...", title: "...", status:"..."}|  ❌ |
 | /api/tasks/:id/post | POST | Write a message on the specified task. Only for the client and worker associated with the task and the admins. | { content:"..."}|  ❌ |
 | /api/tasks/:id/messages | GET | Get all the messages written on the specified task. Only for the client and worker associated with the task and the admins. | ❌ |  ❌ |
+| /api/tasks/:id/image | POST | Post an image to the specified task. Only for the worker associated with the task | ❌ |  ❌ |
+| /api/tasks/:id/image | GET | Get image posted on the specified task. Only for the worker and client associated with the task and the admins | ❌ |  ❌ |
 

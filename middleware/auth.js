@@ -44,7 +44,6 @@ module.exports = {
       const user = await User.findOne({where:{ userId: data.userId }})
       if (!user) { throw new Error() }
       else if(user.role != "client"){ throw new Error() }
-
       req.user = user
 
       next()

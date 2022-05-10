@@ -3,7 +3,7 @@ const Auth = require('../middleware/auth')
 const ImageController = require('../controllers/imageController')
 const router = new Router()
 
-// router.get('/images', Auth.worker, ImageController.getAll)
+router.get('/:id/image', Auth.user, ImageController.getImage)
 router.post('/:id/image', Auth.worker, ImageController.upload)
 
 module.exports = router

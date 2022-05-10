@@ -1,6 +1,7 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const ImageController = require('./imageController')
 require("dotenv").config();
 
 module.exports = {
@@ -25,8 +26,9 @@ module.exports = {
   getSingleTask: async (req, res) => {
     const { id } = req.params;
     const task = await Task.findOne({ where: { taskId: id } });
+    const user = await getUser(req)
     if(task){
-      if (!(author.userId == task.clientId || author.userId == task.workerId || author.role == "admin")) {
+      if (!(user.userId == task.clientId || user.userId == task.workerId || user.role == "admin")) {
         res.status(401).json({error:"A task can be seen only either by the worker or by the client associated with this task"})
       }else{
         res.status(200).json(task);
@@ -93,9 +95,9 @@ module.exports = {
              result.messages.push("Status of task should ne either Done or Pending")
           }
         }
-        if(updateFields.image){
-          
-        }
+        // if(updateFields.image){
+        //   let upload = ImageController.upload
+        // }
         // if(image)// needs to be fixed
         if(!result.error){
           res.status(200).json("Updated successfully")

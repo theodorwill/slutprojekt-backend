@@ -4,13 +4,26 @@ const { InvalidFile, FileExists } = require("../errors");
 const Task = require("../models/Task");
 
 module.exports = {
-//not needed
-//   getAll: (req, res) => {
-//     const images = fs.readdirSync(
-//       path.join(__dirname, "..", "public", "images")
-//     );
-//     res.json({ images });
-//   },
+  getImage: async (req, res, next) => {
+    try {
+      const user = req.user
+      const taskId = req.params.id;
+      const task = await Task.findByPk(taskId);
+      if (!task) {
+        res.status(400).json({error:"Invalid task id"})
+      }else if((!(user.userId == task.clientId || user.userId == task.workerId || user.role == "admin"))){
+        res.status(401).json({error:"Forbidden"})
+      }else {
+        const fileName = task.image;
+        const image = fs.readFileSync(
+          path.join(__dirname, "..", "public", "images", fileName)
+        );
+        res.json({ image });//how to show the image
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
 
   upload: async (req, res, next) => {
     try {
@@ -39,11 +52,16 @@ module.exports = {
           );
           if (update) {
             res.json("Image uploaded successfully");
+          } else {
+            res.status(400).json({ error: "Couldn't upload image" });
           }
+        } else {
+          res
+            .status(400)
+            .json({ error: "Couldn't find task with the specified id" });
         }
       }
     } catch (error) {
-      console.log(error);
       next(error);
     }
   },
