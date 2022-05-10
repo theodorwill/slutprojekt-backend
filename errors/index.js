@@ -37,6 +37,20 @@ class MissingHeader extends IngeByggBaseError{
     this.errorCode = 400
   }
 }
+class InvalidFile extends IngeByggBaseError{
+  constructor(message){
+    super()
+    this.message = message
+    this.errorCode = 400
+  }
+}
+class FileExists extends IngeByggBaseError{
+  constructor(fileName){
+    super()
+    this.message = fileName + " already exists. Please change the name and upload again"
+    this.errorCode = 500
+  }
+}
 
 module.exports = {
   IngeByggBaseError,
@@ -44,5 +58,7 @@ module.exports = {
   Unauthorized,
   TokenExpired,
   Forbidden,
-  MissingHeader
+  MissingHeader,
+  InvalidFile,
+  FileExists
 }
