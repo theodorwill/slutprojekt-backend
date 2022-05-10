@@ -4,12 +4,13 @@ const { InvalidFile, FileExists } = require("../errors");
 const Task = require("../models/Task");
 
 module.exports = {
-  getAll: (req, res) => {
-    const images = fs.readdirSync(
-      path.join(__dirname, "..", "public", "images")
-    );
-    res.json({ images });
-  },
+//not needed
+//   getAll: (req, res) => {
+//     const images = fs.readdirSync(
+//       path.join(__dirname, "..", "public", "images")
+//     );
+//     res.json({ images });
+//   },
 
   upload: async (req, res, next) => {
     try {

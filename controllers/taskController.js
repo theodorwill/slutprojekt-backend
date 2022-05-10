@@ -25,7 +25,15 @@ module.exports = {
   getSingleTask: async (req, res) => {
     const { id } = req.params;
     const task = await Task.findOne({ where: { taskId: id } });
-    res.json(task);
+    if(task){
+      if (!(author.userId == task.clientId || author.userId == task.workerId || author.role == "admin")) {
+        res.status(401).json({error:"A task can be seen only either by the worker or by the client associated with this task"})
+      }else{
+        res.status(200).json(task);
+      }
+    }else{
+      res.status(400).json({error:"Task does not exist"})
+    }
   },
 
   createTask: async (req, res) => {
@@ -84,6 +92,9 @@ module.exports = {
              result.error=true
              result.messages.push("Status of task should ne either Done or Pending")
           }
+        }
+        if(updateFields.image){
+          
         }
         // if(image)// needs to be fixed
         if(!result.error){
