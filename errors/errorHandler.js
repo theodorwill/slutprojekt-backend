@@ -7,7 +7,9 @@ module.exports = {
     console.log('Error handler', error)
     if (error instanceof InvalidCredentials) {
       res.status(error.errorCode).json({ error: error.message })
-    } else if (error instanceof BaseError) {
+    }else if(error instanceof IngeByggBaseError){
+      res.status(400).json({error:error.message})
+    }else if (error instanceof BaseError) {
       res.status(400).json({ error: error.message })
     } else if (error instanceof SyntaxError) {
       res.status(400).json({ error: 'Invalid JSON' })

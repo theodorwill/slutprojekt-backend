@@ -18,13 +18,11 @@ app.use(fileUpload({useTempFiles : true}))
 app.use('/api', routes.auth);
 app.use('/api/tasks', routes.messages);
 app.use('/api/tasks', routes.tasks);
-app.use('/api/image', routes.images)
+app.use('/api/tasks', routes.images);
 app.use(errorHandler)
 
 // Listen for requests
 const PORT = process.env.PORT || 7000
 app.listen(PORT, () => console.log(`Server Running on ${PORT}`))
 
-app.use((req, res) => {
-  res.status(404).render('404')
-})
+

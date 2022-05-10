@@ -4,6 +4,6 @@ const ImageController = require('../controllers/imageController')
 const router = new Router()
 
 router.get('/', Auth.worker, ImageController.getAll)
-router.post('/', Auth.worker, ImageController.upload)
+router.post('/:id/image', Auth.worker, ImageController.upload)
 
 module.exports = router
