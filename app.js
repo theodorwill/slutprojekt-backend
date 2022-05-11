@@ -11,7 +11,6 @@ const app = express()
 //middleware
 app.use(Logger)
 app.use(express.json())
-app.use(express.static('public'))
 app.use(fileUpload({useTempFiles : true}))
 
 //routes
@@ -21,8 +20,13 @@ app.use('/api/tasks', routes.tasks);
 app.use('/api/tasks', routes.images);
 app.use(errorHandler)
 
+
 // Listen for requests
 const PORT = process.env.PORT || 7000
 app.listen(PORT, () => console.log(`Server Running on ${PORT}`))
+
+app.use((req,res)=>{
+    res.status(404).json({error:"The requested page is not found"})
+})
 
 

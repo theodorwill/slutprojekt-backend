@@ -17,7 +17,8 @@ module.exports = {
     }
   },
 
-  registerClient: async (req, res) => {
+  registerClient: async (req, res, next) => {
+    try{
     const { email, password, userName, role } = req.body;
     const body = req.body;
     let validation = await validate(body);
@@ -48,9 +49,14 @@ module.exports = {
         error: validation.messages,
       });
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
   },
 
-  registerWorker: async (req, res) => {
+  registerWorker: async (req, res, next) => {
+    try{
     const { email, password, userName, role } = req.body;
     const body = req.body;
     let validation = await validate(body);
@@ -81,6 +87,10 @@ module.exports = {
         error: validation.messages,
       });
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
   },
 
   // updateUser: async (req,res) => {
@@ -89,7 +99,8 @@ module.exports = {
 
   // }
 
-  deleteUser: async (req, res) => {
+  deleteUser: async (req, res, next) => {
+    try{
     let user = await User.findOne({ where: { userId: req.params.id } });
     if (!user) {
       res.status(401).json({
@@ -103,12 +114,22 @@ module.exports = {
       await user.destroy();
       res.status(200).json({ message: "User deleted" });
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
   },
 
-  getAllUsers : async (req,res)=>{
+  getAllUsers : async (req,res, next)=>{
+    try{
     const users = await User.findAll({attributes: {exclude: ['password']}})
     res.status(200).json(users)
+  } catch (error) {
+    console.log(error);
+    next(error);
   }
+  }
+
 };
 
 function generateHash(password) {

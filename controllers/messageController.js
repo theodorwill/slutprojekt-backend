@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = {
-  getMessages: async (req, res) => {
+  getMessages: async (req, res, next) => {
+    try{
     const { id } = req.params;
     let result = { error: false, messages: [] };
     await validateTaskUser(req, result);
@@ -24,9 +25,14 @@ module.exports = {
         error: result.messages,
       });
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
   },
 
-  postMessage: async (req, res) => {
+  postMessage: async (req, res, next) => {
+    try{
     const result = await validateMessage(req);
     if (!result.error) {
       // const author = await getUser(req);
@@ -50,6 +56,10 @@ module.exports = {
         error: result.messages,
       });
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
   },
 };
 

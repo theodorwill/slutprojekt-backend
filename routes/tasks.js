@@ -13,7 +13,7 @@ router.delete('/:id',Auth.admin,TaskController.deleteTask)
 
 // router.get('/:id/images', Auth.user, TaskController.getImages)
 
-router.get('/:id/messages', Auth.user, MessageController.getMessages)
-router.post('/:id/messages', Auth.user, MessageController.postMessage)
+// router.get('/:id/messages', Auth.user, MessageController.getMessages)
+// router.post('/:id/messages', Auth.user, MessageController.postMessage)
 
 module.exports = router

@@ -6,9 +6,7 @@ module.exports = {
   async admin(req, res, next) {
     try {
       const data = verifyToken(req);
-      console.log("data in middleware", data);
       const user = await User.findOne({ where: { userId: data.userId } });
-      console.log("user", user);
       if (!user) {
         throw new Error();
       } else if (user.role != "admin") {
@@ -31,9 +29,7 @@ module.exports = {
       } else if (user.role != "worker") {
         throw new Error();
       }
-
       req.user = user;
-
       next();
     } catch (error) {
       res.status(401).send({ error: "Unauthorized" });
