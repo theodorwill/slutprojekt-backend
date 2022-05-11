@@ -1,13 +1,9 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const ImageController = require("./imageController");
-require("dotenv").config();
 
 module.exports = {
   getTasks: async (req, res, next) => {
     try {
-      // const user = await getUser(req);
       const user = req.user;
       let tasks;
       if (user.role === "admin") {
@@ -34,7 +30,6 @@ module.exports = {
     try {
       const { id } = req.params;
       const task = await Task.findOne({ where: { taskId: id } });
-      // const user = await getUser(req)
       const user = req.user;
       if (task) {
         if (
@@ -44,12 +39,10 @@ module.exports = {
             user.role == "admin"
           )
         ) {
-          res
-            .status(401)
-            .json({
-              error:
-                "A task can be seen only either by the worker or by the client associated with this task",
-            });
+          res.status(401).json({
+            error:
+              "A task can be seen only either by the worker or by the client associated with this task",
+          });
         } else {
           res.status(200).json(task);
         }
@@ -66,7 +59,6 @@ module.exports = {
     try {
       const result = await validateTask(req.body);
       if (!result.error) {
-        // const worker = await getUser(req);
         const worker = req.user;
         const { description, image, clientId, title } = req.body;
 
@@ -103,7 +95,6 @@ module.exports = {
     try {
       const taskId = req.params.id;
       const updateFields = req.body;
-      // const user = await getUser(req);
       let task = await Task.findOne({ where: { taskId } });
       const user = req.user;
       let result = { error: false, messages: [] };
@@ -111,32 +102,31 @@ module.exports = {
         res.status(400).json("Unauthorized");
       } else {
         if (task.taskId != taskId) {
-          res.status(401).json("Task not found");
-        } else {
-          if (updateFields.description) {
-            await task.update({ description: updateFields.description });
-          }
-          if (updateFields.title) {
-            await task.update({ title: updateFields.title });
-          }
-          if (updateFields.status) {
-            if (
-              updateFields.status == "Pending" ||
-              updateFields.status == "Done"
-            ) {
-              await task.update({ status: updateFields.status });
-            } else {
-              result.error = true;
-              result.messages.push(
-                "Status of task should ne either Done or Pending"
-              );
-            }
-          }
-          if (!result.error) {
-            res.status(200).json("Updated successfully");
+          return res.status(401).json("Task not found");
+        }
+        if (updateFields.description) {
+          await task.update({ description: updateFields.description });
+        }
+        if (updateFields.title) {
+          await task.update({ title: updateFields.title });
+        }
+        if (updateFields.status) {
+          if (
+            updateFields.status == "Pending" ||
+            updateFields.status == "Done"
+          ) {
+            await task.update({ status: updateFields.status });
           } else {
-            res.status(401).json({ error: result.messages });
+            result.error = true;
+            result.messages.push(
+              "Status of task should ne either Done or Pending"
+            );
           }
+        }
+        if (!result.error) {
+          res.status(200).json("Updated successfully");
+        } else {
+          res.status(401).json({ error: result.messages });
         }
       }
     } catch (error) {
@@ -194,8 +184,4 @@ async function validateTask(body) {
   return result;
 }
 
-async function getUser(req) {
-  const token = req.header("Authorization").replace("Bearer ", "");
-  const data = jwt.verify(token, process.env.JWT_SECRET);
-  return data;
-}
+

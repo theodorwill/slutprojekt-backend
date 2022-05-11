@@ -48,7 +48,7 @@ module.exports = {
             { image: sampleFile.name },
             { where: { id } }
           );}
-          res.status(200).json({message:"uploades successfully"})
+          res.status(200).json({message:"uploaded successfully"})
       } else {
         sampleFile.mv(
           path.join(__dirname, "..", "uploads", sampleFile.name),

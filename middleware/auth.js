@@ -1,12 +1,10 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
 require("dotenv").config();
 
 module.exports = {
   async admin(req, res, next) {
     try {
-      const data = verifyToken(req);
-      const user = await User.findOne({ where: { userId: data.userId } });
+      const user = verifyToken(req);
       if (!user) {
         throw new Error();
       } else if (user.role != "admin") {
@@ -21,9 +19,7 @@ module.exports = {
 
   async worker(req, res, next) {
     try {
-      const data = verifyToken(req);
-      // const user = await User.findOne({ where: { userId: data.userId } });
-      const user = await User.findOne({ where: { userId: data.userId } },{attributes: {exclude: ['password']}});
+      const user = verifyToken(req);
       if (!user) {
         throw new Error();
       } else if (user.role != "worker") {
@@ -38,8 +34,7 @@ module.exports = {
 
   async client(req, res, next) {
     try {
-      const data = verifyToken(req);
-      const user = await User.findOne({ where: { userId: data.userId } },{attributes: {exclude: ['password']}});
+      const user = verifyToken(req);
       if (!user) {
         throw new Error();
       } else if (user.role != "client") {
@@ -54,8 +49,7 @@ module.exports = {
 
   async user(req, res, next) {
     try {
-      const data = verifyToken(req);
-      const user = await User.findOne({ where: { userId: data.userId } });
+      const user = verifyToken(req);
       if (!user) {
         throw new Error();
       }

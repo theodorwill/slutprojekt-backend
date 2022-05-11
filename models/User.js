@@ -11,7 +11,7 @@ class User extends Model {
     if (!email || !password) {
       throw new InvalidCredentials();
     }
-    const user = await User.findOne({ where: { email } }); 
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       throw new InvalidCredentials();
     }
@@ -26,9 +26,6 @@ class User extends Model {
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
       );
-
-      const { email, userName, role } = user;
-      const userData = { email, userName, role };
 
       return { token };
     }

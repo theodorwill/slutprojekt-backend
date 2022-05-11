@@ -5,10 +5,8 @@ const {Router} = require('express')
 const router = new Router()
 
 router.post("/auth", AuthController.authenticate);
-router.post("/registerclient", Auth.admin, AuthController.registerClient);
-router.post("/registerworker", Auth.admin, AuthController.registerWorker);
+router.post("/registeruser", Auth.admin, AuthController.registerUser);
 router.get("/users", Auth.admin, AuthController.getAllUsers);
-// router.patch("/updateuser/:id", Auth.user, AuthController.updateUser);
 router.delete("/deleteuser/:id", Auth.admin, AuthController.deleteUser);
 
 
