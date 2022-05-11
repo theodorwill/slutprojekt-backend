@@ -1,20 +1,32 @@
-const express = require('express');
+const express = require('express')
+const routes = require('./routes')
+const Logger = require('./middleware/Logger')
+const connection = require('./database/connection')
+const config = require('./models/index')
+const { errorHandler } = require('./errors/errorHandler')
+const fileUpload = require('express-fileupload')
 
 // express app
-const app = express();
+const app = express()
+//middleware
+app.use(Logger)
+app.use(express.json())
+app.use(fileUpload({useTempFiles : true}))
 
-/* // register view engine
-app.set('view engine', 'ejs'); */
+//routes
+app.use('/api', routes.auth);
+app.use('/api/tasks', routes.messages);
+app.use('/api/tasks', routes.tasks);
+app.use('/api/tasks', routes.images);
+app.use(errorHandler)
+
 
 // Listen for requests
-app.listen(3000);
+const PORT = process.env.PORT || 7000
+app.listen(PORT, () => console.log(`Server Running on ${PORT}`))
 
-/* app.get('/', (req, res) => {
-    res.render('index');
-});
+app.use((req,res)=>{
+    res.status(404).json({error:"The requested page is not found"})
+})
 
 
-
-app.use((req, res) => {
-    res.status(404).render('404');
-}) */
