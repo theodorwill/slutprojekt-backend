@@ -5,7 +5,7 @@ const {Router} = require('express')
 const router = new Router()
 
 router.post("/auth", AuthController.authenticate);
-router.post("/registeruser", Auth.admin, AuthController.registerUser);
+router.post("/register", Auth.admin, AuthController.registerUser);
 router.get("/users", Auth.admin, AuthController.getAllUsers);
 router.delete("/deleteuser/:id", Auth.admin, AuthController.deleteUser);
 

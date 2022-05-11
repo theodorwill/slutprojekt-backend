@@ -1,5 +1,7 @@
 node_modules/
 .env
 db.db
-public/images/
+public/
 tmp/
+uploads/
+.vscode
