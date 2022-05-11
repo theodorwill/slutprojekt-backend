@@ -1,10 +1,10 @@
 const Task = require("../models/Task");
 const Message = require("../models/Message");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+
 
 module.exports = {
-  getMessages: async (req, res) => {
+  getMessages: async (req, res, next) => {
+    try{
     const { id } = req.params;
     let result = { error: false, messages: [] };
     await validateTaskUser(req, result);
@@ -24,12 +24,17 @@ module.exports = {
         error: result.messages,
       });
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
   },
 
-  postMessage: async (req, res) => {
+  postMessage: async (req, res, next) => {
+    try{
     const result = await validateMessage(req);
     if (!result.error) {
-      const author = await getUser(req);
+      const author = req.user
       const message = await Message.create({
         content: req.body.content,
         taskId: req.params.id,
@@ -49,6 +54,10 @@ module.exports = {
         error: result.messages,
       });
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
   },
 };
 
@@ -64,7 +73,7 @@ async function validateMessage(req) {
 }
 
 async function validateTaskUser(req, result) {
-  const author = await getUser(req);
+  const author = req.user
   const taskId = req.params.id;
   if (!taskId) {
     result.error = true;
@@ -86,8 +95,4 @@ async function validateTaskUser(req, result) {
   return result;
 }
 
-async function getUser(req) {
-  const token = req.header("Authorization").replace("Bearer ", "");
-  const data = jwt.verify(token, process.env.JWT_SECRET);
-  return data;
-}
+

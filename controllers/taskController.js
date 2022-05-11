@@ -1,128 +1,162 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 module.exports = {
-  getTasks: async (req, res) => {
-    const user = await getUser(req);
-    let tasks;
-    if (user.role === "admin") {
-      tasks = await Task.findAll();
-    } else if (user.role === "client") {
-      tasks = await Task.findAll({ where: { clientId: user.userId } });
-      res.status(200).json(tasks);
-    } else if (user.role === "worker") {
-      tasks = await Task.findAll({ where: { workerId: user.userId } });
-      res.status(200).json(tasks);
-    } else {
-      res.status(401).json({
-        error: "Not logged in!",
-      });
-    }
-  },
-
-  getSingleTask: async (req, res) => {
-    const { id } = req.params;
-    const task = await Task.findOne({ where: { taskId: id } });
-    if(task){
-      if (!(author.userId == task.clientId || author.userId == task.workerId || author.role == "admin")) {
-        res.status(401).json({error:"A task can be seen only either by the worker or by the client associated with this task"})
-      }else{
-        res.status(200).json(task);
-      }
-    }else{
-      res.status(400).json({error:"Task does not exist"})
-    }
-  },
-
-  createTask: async (req, res) => {
-    const result = await validateTask(req.body);
-    if (!result.error) {
-      const worker = await getUser(req);
-      const { description, image, clientId, title } = req.body;
-
-      const task = await Task.create({
-        status: "Pending",
-        description: description,
-        image: image,
-        clientId: clientId,
-        workerId: worker.userId,
-        title: title,
-      });
-
-      if (task.error) {
-        res.status(400).json({
-          errors: task.messages,
-        });
+  getTasks: async (req, res, next) => {
+    try {
+      const user = req.user;
+      let tasks;
+      if (user.role === "admin") {
+        tasks = await Task.findAll();
+        res.status(200).json(tasks);
+      } else if (user.role === "client") {
+        tasks = await Task.findAll({ where: { clientId: user.userId } });
+        res.status(200).json(tasks);
+      } else if (user.role === "worker") {
+        tasks = await Task.findAll({ where: { workerId: user.userId } });
+        res.status(200).json(tasks);
       } else {
-        res.status(200).json({
-          message: "New Task created",
+        res.status(401).json({
+          error: "Not logged in!",
         });
       }
-    } else {
-      res.status(401).json({
-        error: result.messages,
-      });
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
   },
 
-  updateTask: async (req,res) => {
-    const taskId = req.params.id;
-    const updateFields = req.body
-    const user = await getUser(req);
-  let result = { error: false, messages: [] };
-    if(user.role!="worker"){
-      res.status(400).json("Unauthorized")
-    }else{
-      let task = await Task.findOne({where:{taskId}})
-      if(task.taskId!=taskId){
-        res.status(401).json("Task not found")
-      }else{
-        if(updateFields.description){
-          await task.update({description:updateFields.description})
+  getSingleTask: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const task = await Task.findOne({ where: { taskId: id } });
+      const user = req.user;
+      if (task) {
+        if (
+          !(
+            user.userId == task.clientId ||
+            user.userId == task.workerId ||
+            user.role == "admin"
+          )
+        ) {
+          res.status(401).json({
+            error:
+              "A task can be seen only either by the worker or by the client associated with this task",
+          });
+        } else {
+          res.status(200).json(task);
         }
-        if(updateFields.title){
-          await task.update({title:updateFields.title})
+      } else {
+        res.status(400).json({ error: "Task does not exist" });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+
+  createTask: async (req, res, next) => {
+    try {
+      const result = await validateTask(req.body);
+      if (!result.error) {
+        const worker = req.user;
+        const { description, image, clientId, title } = req.body;
+
+        const task = await Task.create({
+          status: "Pending",
+          description: description,
+          image: image,
+          clientId: clientId,
+          workerId: worker.userId,
+          title: title,
+        });
+
+        if (task.error) {
+          res.status(400).json({
+            errors: task.messages,
+          });
+        } else {
+          res.status(200).json({
+            message: "New Task created",
+          });
         }
-        if(updateFields.status){
-          if(updateFields.status == "Pending" || updateFields.status =="Done"){
-            await task.update({status:updateFields.status})
-          }else{
-             result.error=true
-             result.messages.push("Status of task should ne either Done or Pending")
+      } else {
+        res.status(401).json({
+          error: result.messages,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  },
+
+  updateTask: async (req, res, next) => {
+    try {
+      const taskId = req.params.id;
+      const updateFields = req.body;
+      let task = await Task.findOne({ where: { taskId } });
+      const user = req.user;
+      let result = { error: false, messages: [] };
+      if (user.userId != task.workerId) {
+        res.status(400).json("Unauthorized");
+      } else {
+        if (task.taskId != taskId) {
+          return res.status(401).json("Task not found");
+        }
+        if (updateFields.description) {
+          await task.update({ description: updateFields.description });
+        }
+        if (updateFields.title) {
+          await task.update({ title: updateFields.title });
+        }
+        if (updateFields.status) {
+          if (
+            updateFields.status == "Pending" ||
+            updateFields.status == "Done"
+          ) {
+            await task.update({ status: updateFields.status });
+          } else {
+            result.error = true;
+            result.messages.push(
+              "Status of task should ne either Done or Pending"
+            );
           }
         }
-        if(updateFields.image){
-          
-        }
-        // if(image)// needs to be fixed
-        if(!result.error){
-          res.status(200).json("Updated successfully")
-        }else{
-          res.status(401).json({error:result.messages})
+        if (!result.error) {
+          res.status(200).json("Updated successfully");
+        } else {
+          res.status(401).json({ error: result.messages });
         }
       }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
   },
 
-  deleteTask: async (req, res) => {
-    const taskId = req.params.id
-    if(!taskId){
-      res.status(400).json({error:"No id specified"})
-    }else{
-      let result = await Task.destroy({where:{taskId:req.params.id }} )
-        if(result==0){
-            res.status(400).json({error: 'Could not delete task'})
-        }else{
-            res.status(200).json({message: 'Task deleted'})
+  deleteTask: async (req, res, next) => {
+    try {
+      const taskId = req.params.id;
+      if (!taskId) {
+        res.status(400).json({ error: "No id specified" });
+      } else {
+        let result = await Task.destroy({ where: { taskId: req.params.id } });
+        if (result == 0) {
+          res.status(400).json({ error: "Could not delete task" });
+        } else {
+          res.status(200).json({ message: "Task deleted" });
         }
+      }
+    } catch (error) {
+      console.log(error);
+      next(error);
     }
-  }
+  },
 };
 
 async function validateTask(body) {
-  const { description, image, clientId, title } = body;
+  const { description, clientId, title } = body;
   let result = { error: false, messages: [] };
   if (!description) {
     result.error = true;
@@ -150,8 +184,4 @@ async function validateTask(body) {
   return result;
 }
 
-async function getUser(req) {
-  const token = req.header("Authorization").replace("Bearer ", "");
-  const data = jwt.verify(token, process.env.JWT_SECRET);
-  return data;
-}
+
