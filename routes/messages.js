@@ -6,9 +6,5 @@ const router = new Router()
 
 router.get('/:id/messages', Auth.user, MessageController.getMessages)
 router.post('/:id/postmessage', Auth.user, MessageController.postMessage)
-// router.patch('/:id/update/:msgid', Auth.user, MessageController.updateMessage)
-// router.delete('/:id/delete/:msgid', Auth.user, MessageController.deleteMessage)
-// router.post('/:id/images', Auth.user, MessageController.uploadImage)
-
 
 module.exports = router
