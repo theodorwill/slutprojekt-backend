@@ -94,7 +94,7 @@ module.exports = {
   updateTask: async (req, res, next) => {
     try {
       const taskId = req.params.id;
-      const updateFields = req.body;
+      const {description, title, status} = req.body;
       let task = await Task.findOne({ where: { taskId } });
       const user = req.user;
       let result = { error: false, messages: [] };
@@ -104,18 +104,22 @@ module.exports = {
         if (task.taskId != taskId) {
           return res.status(401).json("Task not found");
         }
-        if (updateFields.description) {
-          await task.update({ description: updateFields.description });
+        var updateObject = null
+
+        if (description) {
+           updateObject = { description:description };
         }
-        if (updateFields.title) {
-          await task.update({ title: updateFields.title });
+
+        if (title) {
+          updateObject.title = title
         }
-        if (updateFields.status) {
+
+        if (status) {
           if (
-            updateFields.status == "Pending" ||
-            updateFields.status == "Done"
+            status == "Pending" ||
+            status == "Done"
           ) {
-            await task.update({ status: updateFields.status });
+            updateObject.status = status;
           } else {
             result.error = true;
             result.messages.push(
@@ -123,6 +127,11 @@ module.exports = {
             );
           }
         }
+
+        if(updateObject){
+          await task.update(updateObject);
+        }
+        
         if (!result.error) {
           res.status(200).json("Updated successfully");
         } else {
