@@ -1,7 +1,6 @@
 const Task = require("../models/Task");
 const Message = require("../models/Message");
 
-
 module.exports = {
   getMessages: async (req, res, next) => {
     try{
@@ -48,6 +47,7 @@ module.exports = {
         res.status(200).json({
           message: "New message posted",
         });
+        req.app.get('socketOut').emit('newMessage', message.content);
       }
     } else {
       res.status(401).json({
