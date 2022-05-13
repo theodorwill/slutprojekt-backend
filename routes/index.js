@@ -9,5 +9,4 @@ module.exports = {
   tasks,
   images,
   messages
-  // ,messages,tasks,users
 }
