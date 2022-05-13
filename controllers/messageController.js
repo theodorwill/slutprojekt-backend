@@ -47,7 +47,7 @@ module.exports = {
         res.status(200).json({
           message: "New message posted",
         });
-        req.app.get('clientSocket').emit('newMessage', message.content);
+        req.app.get('socketOut').emit('newMessage', message.content);
       }
     } else {
       res.status(401).json({

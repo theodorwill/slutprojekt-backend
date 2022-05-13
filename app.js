@@ -13,7 +13,6 @@ const http = require('http')
 const {Server} = require('socket.io')
 
 const server = http.createServer(app)
-const serverIo = new Server(server)
 
 //middleware
 app.use(Logger)
@@ -28,12 +27,16 @@ app.use('/api/tasks', routes.tasks);
 app.use('/api/tasks', routes.images);
 app.use(errorHandler)
 
-serverIo
+const PORT = process.env.PORT || 7000
+
+// Receiving socket
+const socketIn = new Server(server)
+socketIn
 .on('connection', socket => {
   console.log("Client connected with ID: " + socket.id);
 
   socket.on('newMessage', function(msg) {
-    console.log('new message: ', msg)
+    console.log('A new message has been posted: ', msg)
   });
 
   socket.on('disconnect', () => {
@@ -41,14 +44,12 @@ serverIo
   })
 })
 
+// Sending socket
 var io = require('socket.io-client');
-//var socket = io()
-var socket = io.connect('http://localhost:7000')
-//socket.emit('foo', "Hello Test");
-app.set('clientSocket', socket);
+var socketOut = io.connect('http://localhost:' + PORT)
+app.set('socketOut', socketOut);
 
 // Listen for requests
-const PORT = process.env.PORT || 7000
 server.listen(PORT, () => console.log(`Server Running on ${PORT}`))
 
 app.use((req,res)=>{
